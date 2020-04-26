@@ -1,0 +1,36 @@
+.side-navbar .sidenav-header{
+	background: #393836 !important;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+/* .side-navbar.shrink {
+    width: 200px !important;
+    text-align: center;
+} */
+.side-navbar.shrink ul li a {
+    font-size: 0.7rem !important; 
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+a {
+    text-align: center !important;
+  
+}
+.side-navbar .sidenav-header img{
+	width: 100%!important;
+	height: 100%!important;
+}
+.img-fluid {
+    width: 40px !important;
+    height: 40px !important;
+}
+
+
+nav.navbar .dropdown-toggle::after {
+    border: none !important;
+    content: none !important;
+    vertical-align: baseline;
+    font-family: 'FontAwesome';
+    margin-left: .3rem;
+}
