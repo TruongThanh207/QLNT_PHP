@@ -11,7 +11,41 @@
     font-size: 0.7rem !important; 
     padding-left: 5px;
     padding-right: 5px;
+
 }
+/* footer.footerstd{
+    position: fixed!important;
+} */
+.page{
+    background-color: #fff;
+}
+
+
+/* employee */
+.add-employeee{
+    background-image: url("../images/add-employee.gif");
+    background-color: #fff!important;
+}
+.login-page .form-outer,
+.register-page .form-outer {
+    min-height: 0vh!important;
+    padding-top: 0px!important;
+}
+.login-page{
+    background-color: #f4f7fa!important;
+}
+.login-page form
+{
+     max-width: 400px!important;
+}
+.login-page .form-inner, .register-page .form-inner{
+    width: 1000px;
+}
+.card-add-employee{
+    text-align: center;
+}
+
+/* employee */
 
 a {
     text-align: center !important;
@@ -25,7 +59,6 @@ a {
     width: 40px !important;
     height: 40px !important;
 }
-
 
 nav.navbar .dropdown-toggle::after {
     border: none !important;

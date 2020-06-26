@@ -5,19 +5,27 @@ background-size: cover;
 background-repeat: no-repeat;
 height: 100%;
 font-family: 'Numans', sans-serif;
+background-image: url("../images/bg-01.jpg");
 }
 
 .container{
 height: 100%;
 align-content: center;
 }
+h2{
+	font-weight: bold;
+	text-align: center;
 
+}
+.header-login{
+	text-align: center;
+}
 .card{
-height: 380px;
+height: 370px;
 margin-top: auto;
 margin-bottom: auto;
 width: 420px;
-background-color: rgba(230, 255, 230,0.5) !important;
+background-color: rgba(230, 255, 230,0.7) !important;
 }
 
 .remember input
