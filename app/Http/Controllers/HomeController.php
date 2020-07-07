@@ -7,12 +7,13 @@ use App\Person;
 use App\Debit;
 use App\Service;
 use App\Feedback;
+use App\Bill;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function gethome(){
-    	$room = Room::paginate(3);
+    	$room = Room::paginate(5);
     	return view('HomePage.Home', ['title'=> 'Room Management', 'data'=>$room]);
     }
     public function xoaroom(Request $Request)
@@ -99,6 +100,23 @@ class HomeController extends Controller
         $feedback = Feedback::where('registercode', $infor->code)->get();
         $room = Room::where('code', $id)->first();
         $person = Person::where('registercode', $infor->code)->get();
+        //
+            // fix
+
+            $bill = Bill::where('roomcode', $id)
+                        ->where('CMND',$infor->CMND)->orderBy('code', 'DESC')->first();
+            if($bill)
+            {
+                $thangtruoc = date('m',strtotime($bill->daynow));
+            }
+            else
+            {
+                $thangtruoc=null;
+            }
+            
+
+            //
+        //
         $count = 0;
         $countper = 0;
         if($person!=null)
@@ -132,7 +150,7 @@ class HomeController extends Controller
         $monthdk = date('m', strtotime($infor->registerday));
         $daydk = date('d', strtotime($infor->registerday));
 
-        $monthnow = date('m', strtotime("2020/6/1"));
+        $monthnow = date('m', strtotime($s));
         $month = $monthnow-$monthdk;
         $date = date('d-m-Y');
         if($debit==null)
@@ -140,6 +158,12 @@ class HomeController extends Controller
             $debit = new Debit();
             $debit->money =0;
         }
+        if($month_now==$thangtruoc || $monthdk==$month_now) $togglethanhtoan = 0;
+        else if (($thangtruoc<$month_now || $thangtruoc==null) && $monthdk<$month_now)
+        {
+            $togglethanhtoan = 1;
+        }
+
         return view('HomePage.DetailRoom', [
                 'title'=>'', 
                 'person'=>$person,
@@ -156,8 +180,11 @@ class HomeController extends Controller
                 'monthdk'=>$monthdk,
                 'daydk'=>$daydk,
                 'day1'=>$day1,
-                'feedback'=>$feedback
+                'feedback'=>$feedback,
+                'valrole' => $togglethanhtoan
         ]);
+        
+        
     }
     public function gettraphong(Request $Request)
     {

@@ -32,7 +32,7 @@ class UserController extends Controller
                 }
                 else
                 {
-                    return redirect()->route('getlogin');
+                    return redirect()->route('getlogin')->with("er", "ID card does not exist");
                 }
         }
     	if(Auth::attempt($data))
@@ -43,7 +43,7 @@ class UserController extends Controller
     	else
     	{
             
-    		return redirect()->route('getlogin')->with("er", "Wrong username or password");
+    		return redirect()->route('getlogin')->with("er", "Incorrect password or account");
     	}
         
     }
@@ -59,7 +59,7 @@ class UserController extends Controller
             $us = new User();
             $us->name = $Request->Name;
             $us->username = $Request->Username;
-            $us->password = bcrypt($Request->password);
+            $us->password = bcrypt($Request->Password);
             $us->tel = $Request->tel;
             $us->email = $Request->Email;
             $us->role = $Request->role;
@@ -104,7 +104,7 @@ class UserController extends Controller
     {
         $users = User::find($id);
        
-        if($Request->Password == "")
+        if($Request->Password == null)
         {
 
         }
@@ -112,6 +112,7 @@ class UserController extends Controller
             $users->password = bcrypt($Request->Password);
         }
         $users->role = $Request->role;
+
         if($Request->hasFile('myfile'))
         {
             $file = $Request->file('myfile');
@@ -139,5 +140,42 @@ class UserController extends Controller
     {
         $us = User::find($id)->delete();
         return redirect()->route('getemployee')->with('success', 'Xóa thành công!');
+    }
+    public function posteditprofile(Request $Request, $id)
+    {
+        $users = User::find($id);
+        $users->username = $Request->Username;
+        
+        if($Request->Password == null)
+        {
+
+        }
+        else{
+            $users->password = bcrypt($Request->Password);
+        }
+        $users->role = $Request->role;
+
+        if($Request->hasFile('myfile'))
+        {
+            $file = $Request->file('myfile');
+
+            $extension = $file->getClientOriginalExtension();
+            if($extension!='jpg'&& $extension!='png'&&$extension!='jpeg')
+            {
+                return redirect()->route('geteditprofile', ['id'=>$id])->with('Error', 'Bạn chỉ được chọn file ảnh!');
+            }
+            $name = $file->getClientOriginalName();
+            $img = Str::random(4)."_".$name;
+            
+            while(file_exists("asset/images".$img))
+            {
+                $img = Str::random(4)."_".$name;
+            }
+            
+            $file->move("asset/images", $img);
+            $users->img = $img;
+        }
+        $users->save();
+        return redirect()->route('geteditprofile',['id'=>$id])->with('success', 'Sửa thành công!');
     }
 }

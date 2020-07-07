@@ -1,11 +1,11 @@
 
 html, body{
-
+background-image: url("../images/bg-s2.jpg");
 background-size: cover;
 background-repeat: no-repeat;
 height: 100%;
 font-family: 'Numans', sans-serif;
-background-image: url("../images/bg-01.jpg");
+
 }
 
 .container{

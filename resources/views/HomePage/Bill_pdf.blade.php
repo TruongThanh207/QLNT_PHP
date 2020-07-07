@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>A simple, clean, and responsive HTML invoice template</title>
+    <title>Hoa Don Thanh Toan</title>
     
     <style>
     .invoice-box {
@@ -103,7 +103,7 @@
     <div class="invoice-box">
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
-                <td colspan="2">
+                <td colspan="3">
                     <table>
                         <tr>
                             <td class="title">
@@ -112,7 +112,7 @@
                                 <h4>Phong <?php echo (int)substr($room, 5, strlen($room)-5)?> </h4>
                             </td>
                             <td></td>
-                            <td>
+                            <td style="text-align:right;">
                                 Nhan vien: {{$data->name}} <br>
                                 Email: {{$data->email}}<br>
                                 Sdt: {{$data->tel}}<br>
@@ -133,7 +133,7 @@
                 <td>
                     So luong
                 </td>
-                <td>
+                <td style="text-align:right;">
                     Chi Phi
                 </td>
             </tr>

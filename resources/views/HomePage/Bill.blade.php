@@ -103,7 +103,7 @@
       <div class="modal-body">Bạn có chắc muốn xóa không?</div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-        <a class="btn btn-primary" name="btnXacNhanXoa"  href="{{route('getbill')}}">Xóa</a>
+        <button class="btn btn-primary" name="btnXacNhanXoa" >Xóa</a>
       </div>
     </div>
   </div>

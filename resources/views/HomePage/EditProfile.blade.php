@@ -25,7 +25,7 @@
         <div class="form-outer form-detail text-center d-flex align-items-center">
           <div class="form-inner">
             <div class="logo text-uppercase"><strong class="text-primary">Edit Profile</strong></div>
-            <form class="text-left form-validate" action="{{route('postaddemployee')}}" method="POST" enctype="multipart/form-data">
+            <form class="text-left form-validate" action="{{route('posteditprofile',['id'=>$data->id])}}" method="POST" enctype="multipart/form-data">
              <input type="hidden" name="_token"   value="{{csrf_token()}}">
             <div class="row">
             	<div class="col-md-6 col-lg-6">
@@ -34,7 +34,7 @@
 		                <label for="register-username" class="label-material">Username</label>
 		            </div>
 		            <div class="form-group-material">
-		                <input id="register-password" type="password" name="Password" required data-msg="Please enter your password" class="input-material">
+		                <input id="register-password" type="password" name="Password" class="input-material">
 		                <label for="register-password" class="label-material">New Password        </label>
 		            </div>
                 <div class="form-group-material">
@@ -52,6 +52,7 @@
 		            </div>
 		            <div class="form-group-material">
 		                <input id="register-tel" type="number" min="0" minlength="10" maxlength="11" name="tel" required data-msg="Please enter a valid phone number" class="input-material" value="{{$data->tel}}">
+                    <input type="hidden" class="hidden" name="role" value="{{$data->role}}">
 		                <label for="register-tel" class="label-material">Tel      </label>
 		            </div>
 		            <div class="form-group-material">

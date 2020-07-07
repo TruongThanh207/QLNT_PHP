@@ -6,19 +6,12 @@
 <head>
 	<title>Login Page</title>
    	
-	<link rel="stylesheet" type="text/css" href="Asset/css/style.css">
+	<link rel="stylesheet" type="text/css" href="asset/css/style.css">
 </head>
 <body>
 <div class="container">
 	<div class="d-flex justify-content-center h-100">
 		<div class="card ">
-			 @if(session('er'))
-                          <div style="color:red"><p>
-                               {{session('er')}}
-                          </p></div>
-                                   
-                             
-                        @endif
             <div class="card-header header-login">
                 <h2>ACCOUNT LOGIN</h2>
                 
@@ -46,6 +39,16 @@
 						</a>
 						
 					</div>
+					<div id="loi">
+						@if(session('er'))
+                          <div style="color:red; text-align: center"><p>
+                               {{session('er')}}
+                          </p></div>
+                                   
+                             
+                        @endif
+					</div>
+					 
 					<div class="form-group">
 						<input type="hidden" class="hidden" id="flag" name="flag" value="0">
 						<input type="submit" value="Login" class="btn btn-warning float-right login_btn">
@@ -67,8 +70,10 @@
 <script>
 	flag =0;
 	$('#khachthue').click(function(){
+		$('#loi').hide();
 		if(flag==0)
 		{
+
 			$('#user').hide();
 			$('#pass').hide();
 			$(this).text('Bạn là quản trị?');

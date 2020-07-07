@@ -223,27 +223,14 @@
                                     <tr>
                                       <td>Tiền Phòng</td>
                                       <td >
-                                        @if($month==1)
-                                            @if(@daydk==1 && @daynow==1)
-                                             <p id="tienphong">{{$room->price}}</p>
-                                             @endif
-                                            
-                                            @if(@daydk!=1 && @daynow==1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$day/30}}</p>
-                                            @endif
+                                        @if($month>0)
                                                
-                                            @if(@daynow!=1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$day1/30}}</p>
-                                            @endif
+
+                                              <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$daynow/30)}}</p>
+
                                         @else
                                           @if($month==0)
-                                           <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*($daynow-$daydk)/30}}</p>
-                                          @else
-                                            @if (@daynow==1)
-                                              <p id="tienphong">{{$room->price}}</p>
-                                            @else
-                                             <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$daynow/30}}</p>
-                                            @endif
+                                           <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*($daynow-$daydk)/30)}}</p>
                                           @endif
 
                                         @endif

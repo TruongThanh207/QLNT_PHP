@@ -20,6 +20,7 @@
                   <div class="row">
                   	<div class="col-md-6">
                   		<h2>Người Thuê</h2>
+                      <input type="hidden" class="hidden" name="checkbtnthanhtoan" value="{{$valrole}}">
                   	</div>
 					          <div class="col-md-6 text-right">
                   		<button type="button" class="btn btn-primary" data-toggle="modal" name="btnadd" data-target=".add-personal">New</button>
@@ -183,7 +184,7 @@
         </div>
         <input type="hidden" class="hidden" id="codeinfor" value="{{$infor->code}}">
         <a type="button" style="color: white;" data-toggle="modal" data-target=".thanhtoan-modal" name="btnthanhtoan" class="btn btn-warning btn-sm">Thanh Toán</a>
-        <a type="button" data-toggle="modal" style="color: white;" data-target=".xoa-modal" name="btntraphong" class="btn btn-dark btn-sm">Trả Phòng</a>
+        <a type="button" data-toggle="modal" style="color: white;" data-target=".traphong-modal" name="btntraphong" class="btn btn-dark btn-sm">Trả Phòng</a>
         <a type="button" data-toggle="modal" style="color: white;" data-target=".xoano-modal" name="btnxoano" class="btn btn-danger btn-sm">Xóa Nợ</a>
 
 <!-- nguoi thue -->
@@ -246,7 +247,7 @@
       </div>
 
       <!-- modal xoa -->
-          <div class="modal fade xoa-modal" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <!-- <div class="modal fade xoa-modal" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -268,7 +269,7 @@
                   </div>
                 </div>
               </div>
-
+ -->
               <!-- modal xoa no -->
                 <div class="modal fade xoano-modal" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -310,7 +311,7 @@
                       <input type="hidden" name="_token"  value="{{csrf_token()}}">
                         <div class="col-md-12">
                           <div class="card">
-                          
+                          <input type="hidden" class="hidden" name="post_hoadon" value="1">
                             <div class="card-body">
                               <div class="table-responsive">
                                 <table class="table">
@@ -328,33 +329,13 @@
                                       <td>Tiền Phòng</td>
                                       <td >
                                         @if($month==1)
-                                            @if($daydk==1 && $daynow==1)
-                                             <p id="tienphong">{{$room->price}}</p>
-                                             @endif
-                                            
-                                            @if($daydk!=1 && $daynow==1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$day/30}}</p>
-                                            @endif
-                                               
-                                            @if($daynow!=1 &&$daydk==1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price}}</p>
-                                            @endif
-                                            @if($daynow!=1 && $daydk!= 1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$day1/30}}</p>
-                                            @endif
-                                        @else
-                                          @if($month==0)
-                                           <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*($daynow-$daydk)/30}}</p>
-                                          @else
-                                            @if (@daynow==1)
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price}}</p>
-                                            @else
-                                             <p style="color: red; font-weight: bold;" id="tienphong">{{$room->price*$daynow/30}}</p>
-                                            @endif
+                                      <p id="tienphong" style="color: red; font-weight: bold;">{{(int)($room->price*$day1/30)}}</p>
+                                        @else 
+                                          @if ($month>1)
+                                          <p id="tienphong" style="color: red; font-weight: bold;">{{$room->price}}</p>
                                           @endif
 
                                         @endif
-  
                                       </td>
                                       <td></td>
                                       
@@ -454,6 +435,7 @@
                          <input type="hidden" class="hidden" name="roomcode" value="{{$infor->roomcode}}">
                          <input type="hidden" class="hidden" id="roommney" name="roommney">
                          <input type="hidden" class="hidden" id="totalmoney" name="totalmoney">
+                          <a type="button" href="{{route('detailroom',['id'=>$room->code])}}" class="btn btn-dark">Trở Về</a>
                         <button type="submit" class="btn btn-primary">In Hóa Đơn </button>
 
                       </form>
@@ -462,6 +444,156 @@
                           <input type="hidden" class="hidden" id="codemoney" name="codemoney">
                           <button type="submit" class="btn btn-primary">Ghi Nợ</button>
                         </form>
+                      </div>
+                  </div>
+
+                </div>
+
+                 
+              </div>
+              <!-- modal thanh toan -->
+               <div class="modal fade traphong-modal" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Thông tin thanh toán</h5>
+                      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                   
+                      <div class="row">
+                      <form action="{{route('pdf')}}" method="POST">
+                      <input type="hidden" name="_token"  value="{{csrf_token()}}">
+                        <div class="col-md-12">
+                          <div class="card">
+                          <input type="hidden" class="hidden" name="post_hoadon" value="0">
+                            <div class="card-body">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th></th>
+                                      <th>{{$date}}</th>
+                                      <th>Tính theo ngày 1 đầu tháng</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                    <tr>
+                                      <td>Tiền Phòng</td>
+                                      <td >
+                                        @if($month==0)
+                                      <p id="tienphong2" style="color: red; font-weight: bold;">{{(int)($room->price*($daynow-$daydk)/30)}}</p>
+                                        @else
+                                         <p style="color: red; font-weight: bold;" id="tienphong2">{{(int)($room->price*$daynow/30)}}</p>
+                                        @endif
+
+                                      </td>
+                                      <td></td>
+                                      
+                                    </tr>
+                                    <tr>
+                                      <td>Nợ</td>
+                                      <td ><p id="debit2" style="color: red; font-weight: bold;">{{$debit->money}}</p></td>
+                                      <input type="hidden" class="hidden" name="debitbill" value="{{$debit->money}}">
+                                      <td></td>
+                                      
+                                    </tr>
+                                    
+                                     <tr>
+                                      <td>Dịch Vụ</td>
+                                      <td>
+                                         @foreach($service as $s)
+                                          @if($s->name=='Internet')
+                                       <div class="form-check form-check-inline">
+                                       
+                                         
+                                          <input class="form-check-input" type="checkbox" name="internet" id="internet2" value="{{$s->price}}">
+                                          <label class="form-check-label" id="internetlabel" for="inlineCheckbox1">Internet  ({{$s->price}})</label>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                        @foreach($service as $s)
+                                          @if($s->name=='Truyền Hình Cáp')
+                                       <div class="form-check form-check-inline">
+                                       
+                                         
+                                          <input class="form-check-input" type="checkbox" name="thc" id="thcap2" value="{{$s->price}}">
+                                          <label class="form-check-label" id="thcaplabel" for="inlineCheckbox1" >Truyền Hình Cap   ({{$s->price}})</label>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                      </td>
+                                      <td></td>
+
+                                    </tr>
+                                    <tr>
+                                      <td>Xe</td>
+                                      <td><input type="number" id="xe2" style="width: 10rem; float: left; margin-right: 10px" name="xe" value="{{$countxe}}" disabled="true"></td>
+                                      <input type="hidden" class="hidden" name="xe_count" value="{{$countxe}}">
+                                      <td>
+                                        <p id="xe_price2">
+                                        @foreach($service as $s)
+                                         @if($s->name == 'Xe')
+                                         {{$s->price}}
+                                           <input type="hidden" class="hidden" name="xe_price" value="{{$s->price}}">
+                                         @endif
+                                         @endforeach
+                                       </p>
+                                      
+  
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                       @foreach($service as $s)
+                                          @if($s->name=='Chỉ Số Điện')
+                                      <td>Điện</td>
+                                      <td><input type="number" id="index_dien_chot2" min="0" style="width: 10rem; float: left; margin-right: 10px" disabled name="dien"></td>
+                                       <input type="hidden" class="hidden" name="dien" id="dien_chot2">
+                                      <td><p id="dien">{{$s->price}}</p></td>
+                                      <input type="hidden" class="hidden" name="price_dien" id="price_dien2">
+                                       @endif
+                                        @endforeach
+                                    </tr>
+                                     <tr>
+                                      @foreach($service as $s)
+                                          @if($s->name=='Chỉ Số Nước')
+                                      <td>Nước</td>
+                                      <td>  <input type="number" id="index_nuoc_chot2" min="0" style="width: 10rem; float: left; margin-right: 10px" disabled></td>
+                                       <input type="hidden" class="hidden" name="nuoc" id="nuoc_chot2">
+                                       <input type="hidden" class="hidden" name="price_nuoc" id="price_nuoc2">
+                                      <td><p id="nuoc">{{$s->price}}</p></td>
+                                        @endif
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                     
+                                      <td>Tổng Tiền</td>
+                                      <td><p id="tongtien2" style="color: red; font-weight: bold;"></p></td>
+                                      <td></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        
+                         <input type="hidden" class="hidden" id="use" name="use" value="{{Auth::user()->id}}">
+                         <input type="hidden" class="hidden" name="daynow" value="{{$date}}">
+                         <input type="hidden" class="hidden" name="cmnd" value="{{$infor->CMND}}">
+                         <input type="hidden" class="hidden" name="roomcode" value="{{$infor->roomcode}}">
+                         <input type="hidden" class="hidden" id="roommney2" name="roommney">
+                         <input type="hidden" class="hidden" id="totalmoney2" name="totalmoney">
+                         <input type="hidden" class="hidden" id="code" name="code">
+                          <a type="button" href="{{route('gethome')}}" class="btn btn-dark">Trở Về</a>
+                        <button type="submit" class="btn btn-primary">In Hóa Đơn </button>
+                         
+                      </form>
                       </div>
                   </div>
 
@@ -502,7 +634,17 @@
 
 
 <script>
-  
+  var check = $('[name=checkbtnthanhtoan]').val();
+  if(check == 0)
+  {
+     $('[name=btnthanhtoan]').hide();
+     $('[name=btntraphong]').show();
+  }
+  else
+  {
+    $('[name=btnthanhtoan]').show();
+    $('[name=btntraphong]').hide();
+  }
   $('[name=btnedit]').click(function() {
     var x = $(this).parents('tr').find('input[type="hidden"]').val();
         $('#idcode').val(x);
@@ -536,10 +678,92 @@ $('[name=btnadd]').click(function() {
   $('[name=btntraphong]').click(function() {
       var x = $('#codeinfor').val();
         $('#code').val(x);
+     var tienphong = $('#tienphong2').text();
+     var debit = $('#debit2').text();
+     var xe_price = $('#xe_price2').text();
+     var nuoc = $('#nuoc').text();
+     var dien = $('#dien').text();
+     var y = parseInt($('#tienphong2').text());
+     $('#roommney2').val(y);
+     var xe =$('#xe2').val();
+      
+    $('#index_dien_chot2').attr("value",""+$('#index_dien').val()+"");
+    $('#index_nuoc_chot2').attr("value",""+$('#index_nuoc').val()+"");
+    var index_nuoc =$('#index_nuoc_chot2').val();
+    var index_dien =$('#index_dien_chot2').val();
+    if(index_dien=="")
+    {
+      index_dien='0';
+    }
+    if(index_nuoc=="")
+    {
+      index_nuoc='0';
+    }
+    // $('#tongtien').text((parseInt(tienphong) +parseInt(debit) + xe*parseInt(xe_price)+parseInt(index_nuoc)*parseInt(nuoc)+parseInt(index_dien)*parseInt(dien) + parseInt(oghep)));
+    var x = parseInt(tienphong) +parseInt(debit) + xe*parseInt(xe_price)+parseInt(index_nuoc)*parseInt(nuoc)+parseInt(index_dien)*parseInt(dien);
+      $('#tongtien2').text(x);
+      $('#codemoney2').val(x);
+     
+       $('#totalmoney2').val(x);
+    var tongtien =0;
+    var thcap =0;
+    var internet = 0;
+    var flag1 = 0;
+    var flag2 = 0;
+
+    $('#thcap2').click(function(){
+      if(flag1==0)
+      {
+         thcap = $('#thcap2').val();
+          x += parseInt(thcap);
+          $('#tongtien2').text(x);
+          $('#codemoney2').val(x);
+           $('#totalmoney2').val(x);
+           flag1=1;
+      }
+      else
+      {
+         thcap = $('#thcap2').val();
+          x -= parseInt(thcap);
+          $('#tongtien2').text(x);
+          $('#codemoney2').val(x);
+           $('#totalmoney').val(x);
+          flag1=0;
+      }
+     
+     
+    })
+     $('#internet2').click(function(){
+      if(flag2==0){
+        internet = $('#internet2').val();
+        flag2=1;
+        x += parseInt(internet);
+        $('#tongtien2').text(x);
+        $('#codemoney2').val(x);
+         $('#totalmoney2').val(x);
+      }
+      else
+      {
+        internet = $('#internet').val();
+        flag2=0;
+        x -= parseInt(internet);
+        $('#tongtien2').text(x);
+        $('#codemoney2').val(x);
+         $('#totalmoney2').val(x);
+      }
+     
+    })
+      $('#nuoc_chot2').attr("value",$('#index_nuoc').val());
+      $('#dien_chot2').attr("value",$('#index_dien').val());
+      $('#price_dien2').attr("value",$('#dien').text());
+      $('#price_nuoc2').attr("value",$('#nuoc').text());
+
+    //tinh tien phonng
     });
  $('[name=btnxoano]').click(function() {
       var x = $('#codeinfor').val();
         $('#codeno').val(x);
+
     });
   $('[name=btnthanhtoan]').click(function(){
      
@@ -564,7 +788,6 @@ $('[name=btnadd]').click(function() {
     {
       index_nuoc='0';
     }
-
     // $('#tongtien').text((parseInt(tienphong) +parseInt(debit) + xe*parseInt(xe_price)+parseInt(index_nuoc)*parseInt(nuoc)+parseInt(index_dien)*parseInt(dien) + parseInt(oghep)));
     var x = parseInt(tienphong) +parseInt(debit) + xe*parseInt(xe_price)+parseInt(index_nuoc)*parseInt(nuoc)+parseInt(index_dien)*parseInt(dien);
       $('#tongtien').text(x);
@@ -628,5 +851,6 @@ $('[name=btnadd]').click(function() {
   });
      
 </script>
+
 
 @endsection

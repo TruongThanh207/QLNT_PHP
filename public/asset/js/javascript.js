@@ -5,6 +5,7 @@ $(document).ready(function () {
 		{
 			$('#user').hide();
 			$('#pass').hide();
+			
 			$(this).text('Bạn là quản trị?');
 			flag = 1;
 		}

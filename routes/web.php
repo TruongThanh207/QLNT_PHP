@@ -32,6 +32,7 @@ Route::get('home', 'HomeController@gethome')->name('gethome')->middleware('login
 Route::get('x-home', 'HomeController@xoaroom')->name('xoaroom')->middleware('login');
 Route::post('register','HomeController@inforregister')->name('inforregister')->middleware('login');
 Route::post('home','HomeController@postroom')->name('postroom')->middleware('login');
+
 Route::get('detail/{id}', 'HomeController@detailroom')->name('detailroom')->middleware('login');
 Route::get('xoaperson', 'HomeController@xoaperson')->name('xoaperson')->middleware('login');
 Route::post('detail/{id}', 'HomeController@fixfeedback')->name('fixed')->middleware('login');
@@ -50,6 +51,7 @@ Route::get('xoaemployee/{id}', 'UserController@xoaemployee')->name('xoaemployee'
 
 
 Route::get('editprofile/{id}', 'UserController@geteditprofile')->name('geteditprofile')->middleware('login');
+Route::post('editprofile/{id}', 'UserController@posteditprofile')->name('posteditprofile')->middleware('login');
 
 Route::get('bill', 'BillController@getbill')->name('getbill')->middleware('login');
 Route::post('xoa-bill', 'BillController@xoabill')->name('xoabill')->middleware('login');

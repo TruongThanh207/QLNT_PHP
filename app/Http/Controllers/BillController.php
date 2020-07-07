@@ -112,54 +112,124 @@ class BillController extends Controller
     }
     public function pdf(Request $Request)
     {
-         $data = new Bill();
-         $data->code = $data->Render_Code();
-         $data->CMND = $Request->cmnd;
-         $data->roomcode = $Request->roomcode;
-         $data->electronic = $Request->dien==null?0:$Request->dien;
-         $data->water = $Request->nuoc==null?0:$Request->nuoc;
-         $data->daynow = date("Y/m/d", strtotime($Request->daynow));
-         if($Request->internet!=null)
-         {
-                $data->internet=1;
-         }
-         else
-         {
-                $data->internet=0;
-         }
-        if($Request->thc!=null)
-         {
-                $data->truyenhinhcap=1;
-         }
-         else
-         {
-                $data->truyenhinhcap=0;
-         }
-         $data->debit = $Request->debitbill;
-         $data->totalmoney = $Request->totalmoney;
+        if($Request->post_hoadon==1)
+        {
+             $s = date("Y/m/d");
+             $month_now = date('m',strtotime($s));
+             $year_now = date('Y',strtotime($s));
+             $day_first = $year_now."/".$month_now."/01";
+             $data = new Bill();
+             $data->code = $data->Render_Code();
+             $data->CMND = $Request->cmnd;
+             $data->roomcode = $Request->roomcode;
+             $data->electronic = $Request->dien==null?0:$Request->dien;
+             $data->water = $Request->nuoc==null?0:$Request->nuoc;
+             $data->daynow = $day_first;
+             if($Request->internet!=null)
+             {
+                    $data->internet=1;
+             }
+             else
+             {
+                    $data->internet=0;
+             }
+            if($Request->thc!=null)
+             {
+                    $data->truyenhinhcap=1;
+             }
+             else
+             {
+                    $data->truyenhinhcap=0;
+             }
+             $data->debit = $Request->debitbill;
+             $data->totalmoney = $Request->totalmoney;
 
-          $data->save();
+              $data->save();
 
-          $use = User::find($Request->use);
+              $use = User::find($Request->use);
+             
+             $pdf = PDF::loadView('HomePage.Bill_pdf',[
+                'title'=>'HÓA ĐƠN', 
+                'data'=>$use,
+                'debit'=> $Request->debitbill,
+                'totalmoney'=> $Request->totalmoney,
+                'xe'=>$Request->xe_count,
+                'internet'=>$Request->internet,
+                'truyenhinhcap'=>$Request->thc,
+                'csdien'=>$Request->dien,
+                'csnuoc'=>$Request->nuoc,
+                'cmnd'=>$Request->cmnd,
+                'room'=>$Request->roomcode,
+                'day'=>date('Y-d-m',strtotime($Request->daynow)),
+                'tienphong'=>$Request->roommney,
+                'pricedien'=>$Request->price_dien,
+                'pricenuoc'=>$Request->price_nuoc,
+                'pricexe'=>$Request->xe_price
+            ]);
+             return $pdf->download('hoadon.pdf');
+        }
+        else
+        {
 
-         $pdf = PDF::loadView('HomePage.Bill_pdf',[
-            'title'=>'HÓA ĐƠN', 
-            'data'=>$use,
-            'debit'=> $Request->debitbill,
-            'totalmoney'=> $Request->totalmoney,
-            'xe'=>$Request->xe_count,
-            'internet'=>$Request->internet,
-            'truyenhinhcap'=>$Request->thc,
-            'csdien'=>$Request->dien,
-            'csnuoc'=>$Request->nuoc,
-            'cmnd'=>$Request->cmnd,
-            'room'=>$Request->roomcode,
-            'day'=>date('Y-d-m',strtotime($Request->daynow)),
-            'tienphong'=>$Request->roommney,
-            'pricedien'=>$Request->price_dien,
-            'pricenuoc'=>$Request->price_nuoc,
-            'pricexe'=>$Request->xe_price
-        ]);
+             $data = new Bill();
+             $data->code = $data->Render_Code();
+             $data->CMND = $Request->cmnd;
+             $data->roomcode = $Request->roomcode;
+             $data->electronic = $Request->dien==null?0:$Request->dien;
+             $data->water = $Request->nuoc==null?0:$Request->nuoc;
+             $data->daynow = date("Y/m/d", strtotime($Request->daynow));
+             if($Request->internet!=null)
+             {
+                    $data->internet=1;
+             }
+             else
+             {
+                    $data->internet=0;
+             }
+            if($Request->thc!=null)
+             {
+                    $data->truyenhinhcap=1;
+             }
+             else
+             {
+                    $data->truyenhinhcap=0;
+             }
+             $data->debit = $Request->debitbill;
+             $data->totalmoney = $Request->totalmoney;
+
+              $data->save();
+             
+//traphong
+
+                $getinfor = InforRegister::where('code', $Request->code)->first();
+                $room = Room::where('code', $getinfor->roomcode)->update([
+                        'status'=> 0
+                ]);
+                $infor = InforRegister::where('code', $Request->code)->delete();
+
+// //traphong
+              $use = User::find($Request->use);
+             
+             $pdf = PDF::loadView('HomePage.Bill_pdf',[
+                'title'=>'HÓA ĐƠN', 
+                'data'=>$use,
+                'debit'=> $Request->debitbill,
+                'totalmoney'=> $Request->totalmoney,
+                'xe'=>$Request->xe_count,
+                'internet'=>$Request->internet,
+                'truyenhinhcap'=>$Request->thc,
+                'csdien'=>$Request->dien,
+                'csnuoc'=>$Request->nuoc,
+                'cmnd'=>$Request->cmnd,
+                'room'=>$Request->roomcode,
+                'day'=>date('Y-d-m',strtotime($Request->daynow)),
+                'tienphong'=>$Request->roommney,
+                'pricedien'=>$Request->price_dien,
+                'pricenuoc'=>$Request->price_nuoc,
+                'pricexe'=>$Request->xe_price
+            ]);
+             return $pdf->download('hoadon.pdf');
+         
         //  $us = array([
         //     'title'=>'HÓA ĐƠN', 
         //     'use'=>$use,
@@ -174,9 +244,10 @@ class BillController extends Controller
         //     'room'=>$Request->roomcode,
         //     'day'=>date('Y-d-m',strtotime($Request->daynow))
         // ]);
+        }
 
 
-        return $pdf->download('hoadon.pdf');
+        
        
     }
     public function xoabill(Request $Request)
