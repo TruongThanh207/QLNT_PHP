@@ -65,7 +65,8 @@ Route::get('x-service', 'ServiceController@xoaservice')->name('xoaservice')->mid
 
 Route::get('khachthue/{cmnd}', 'PersonalController@getkhachthue')->name('khachthue')->middleware('cmnd');
 Route::get('bill-khachthue', 'BillController@getbillbymonth')->name('getbillbymonth')->middleware('cmnd');
-Route::post('phanhoi', 'BillController@postphanhoi')->name('postphanhoi')->middleware('cmnd');
+Route::post('khachthue/{cmnd}', 'BillController@postphanhoi')->name('khachthue')->middleware('cmnd');
+//Route::post('phanhoi', 'BillController@postphanhoi')->name('postphanhoi');
 
 Route::post('pdf', 'BillController@pdf')->name('pdf')->middleware('login');
 

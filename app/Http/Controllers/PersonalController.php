@@ -53,16 +53,26 @@ class PersonalController extends Controller
 
     public function getkhachthue($cmnd){
         $infor = InforRegister::where('CMND', $cmnd)->first();
+        //$bill = Bill::where('')
 
+        $bill = Bill::where('roomcode', $infor->roomcode)
+                        ->where('CMND',$cmnd)->orderBy('code', 'DESC')->first();
+        $ngaythanhtoanbill=null; 
+                  $month_bill = null;     
+        if(isset($bill))
+        {
+            $ngaythanhtoanbill = date('m',strtotime($bill->daynow));
+             $month_bill = date('Y/m/d',strtotime($bill->daynow));
+        }
         $room = Room::where('code', $infor->roomcode)->first();
 
         $date = date('d/m/Y');
         $daydk = date('d', strtotime($infor->registerday));
 
         $monthdk = date('m', strtotime($infor->registerday));
-        $monthnow = date('m', strtotime("2020/6/1"));
-        $month = $monthnow-$monthdk;
-
+        
+      
+        $debit = null;
         $debit = Debit::where('registercode', $infor->code)->first();
 
         $person = Person::where('registercode', $infor->code)->get();
@@ -78,31 +88,36 @@ class PersonalController extends Controller
         }
 
         $dayinfor = strtotime($infor->registerday);
-        $s = date("Y/m/d");
-        $datechot = strtotime($s);
+        $times = date("Y/m/d");
+        $datechot = strtotime($times);
         $sec =$datechot - $dayinfor;
         $day =$sec/86400;
 
         $service = Service::all();
 
-        $day_now = date('d',strtotime($s));
+        $day_now = date('d',strtotime($times));
 
-        $month_now = date('m',strtotime($s));
-        $year_now = date('Y',strtotime($s));
+        $month_now = date('m',strtotime($times));
+        $year_now = date('Y',strtotime($times));
+        $month = $month_now-$monthdk;
 
         $day_first = $year_now."/".$month_now."/1";
         $x =strtotime(date($day_first));
         $sec_first = $x-$dayinfor;
         $day1 =$sec_first/86400;
 
-
+        $ngaydebit = null;
         if($debit==null)
         {
             $debit = new Debit();
-            $debit->money =0;
+            $debit->money =0; 
+        }
+        else
+        {
+            $ngaydebit = date('m', strtotime($debit->time));
         }
 
-        $s = Bill::where('cmnd',$cmnd)->paginate(3);
+        $s = Bill::where('cmnd',$cmnd)->paginate(5);
 
         return view('HomePage.KhachThue.infor',[
             'data'=>$s, 
@@ -121,7 +136,10 @@ class PersonalController extends Controller
             'monthdk'=>$monthdk,
             'daydk'=>$daydk,
             'day1'=>$day1,
-            'data'=>$s
+            'times'=>$times,
+            'day_bill'=>$ngaythanhtoanbill,
+            'ngaydebit'=>$ngaydebit,
+            'month_bill'=>$month_bill
 
         ]);
         

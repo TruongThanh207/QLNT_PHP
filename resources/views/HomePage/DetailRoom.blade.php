@@ -336,6 +336,7 @@
                                           @endif
 
                                         @endif
+
                                       </td>
                                       <td></td>
                                       
@@ -485,7 +486,14 @@
                                       <td>Tiền Phòng</td>
                                       <td >
                                         @if($month==0)
+                                         <?php if ($infor->registerday>date('Y-m-d')) { ?>
+                                          <p id="tienphong2" style="color: red; font-weight: bold;">0</p>
+                                        <?php } else { ?>
+
+
                                       <p id="tienphong2" style="color: red; font-weight: bold;">{{(int)($room->price*($daynow-$daydk)/30)}}</p>
+
+                                       <?php }?>
                                         @else
                                          <p style="color: red; font-weight: bold;" id="tienphong2">{{(int)($room->price*$daynow/30)}}</p>
                                         @endif
@@ -570,9 +578,26 @@
                                     </tr>
                                     <tr>
                                      
-                                      <td>Tổng Tiền</td>
+                                      <td>Tiền Cọc</td>
+                                      <td><p id="tiencoc" style="color: red; font-weight: bold;">{{$infor->TienCoc}}</p>
+
+                                      </td>
+                                      <td>
+                                       @if($month>=$infor->ThoiHanHD)
+                                       <p style="color: green;font-style: italic">Đủ điều kiện nhận cọc ({{$infor->ThoiHanHD}} tháng)</p>
+                                       <input type="hidden" class="hidden" name="status" value="1">
+                                       @else
+                                        <p style="color: red;font-style: italic">Không đủ điều kiện nhận cọc ({{$infor->ThoiHanHD}} tháng)</p>
+                                        <input type="hidden" class="hidden" name="status" value="0">
+                                        @endif
+
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                     
+                                      <td>Tiền Trả Phòng</td>
                                       <td><p id="tongtien2" style="color: red; font-weight: bold;"></p></td>
-                                      <td></td>
+                                      <td style="color: #9aa30f; font-style: italic"> *Tiền trả phòng: Hóa đơn tháng hiện tại + Nợ - Tiền cọc </td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -705,6 +730,18 @@ $('[name=btnadd]').click(function() {
       $('#codemoney2').val(x);
      
        $('#totalmoney2').val(x);
+    var status = $('[name=status]').val();
+    if(status==1)
+    {
+      x-=parseInt($('#tiencoc').text());
+      $('#tongtien2').text(x);
+      $('#codemoney2').val(x);
+      $('#totalmoney2').val(x);
+
+    }
+
+
+
     var tongtien =0;
     var thcap =0;
     var internet = 0;
@@ -751,7 +788,7 @@ $('[name=btnadd]').click(function() {
         $('#codemoney2').val(x);
          $('#totalmoney2').val(x);
       }
-     
+      
     })
       $('#nuoc_chot2').attr("value",$('#index_nuoc').val());
       $('#dien_chot2').attr("value",$('#index_dien').val());

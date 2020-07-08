@@ -123,7 +123,7 @@
                           <option value="11" <?php if($monthnow==11) echo "selected"; ?>>Tháng 11</option>
                           <option value="12" <?php if($monthnow==12) echo "selected"; ?>>Tháng 12</option>
                         </select>
-                         <button type="submit" class="btn btn-md btn-danger">Search</button>
+                         <button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true" style="font-size: 16px"></i></button>
                       </div>
                     </form>
                     </div>
@@ -222,18 +222,67 @@
                                     
                                     <tr>
                                       <td>Tiền Phòng</td>
+                                      
                                       <td >
-                                        @if($month>0)
-                                               
-
-                                              <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$daynow/30)}}</p>
-
-                                        @else
-                                          @if($month==0)
+                                        @if($day_bill==null && $debit->time==null)
+                                         @if($monthnow - $monthdk>1)
+                                           <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price)}}</p>
+                                          @endif
+                                          @if($monthnow - $monthdk==1)
+                                           <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$day1/30)}}</p>
+                                           @endif
+                                           @if($monthnow - $monthdk==0)
                                            <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*($daynow-$daydk)/30)}}</p>
+                                           @endif
+                                        @endif
+
+
+
+                                          @if($debit->time!=null&&$day_bill==null)
+
+                                            @if($ngaydebit==$monthnow)
+                                             <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$daynow/30)}}</p>
+                                            @endif
+
+                                            @if($ngaydebit<$monthnow)
+
+                                              
+                                             <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price)}}</p>
+                                             
+
+                                            @endif
+
+                                          @endif  
+
+
+                                          @if($debit->time==null&&$day_bill!=null)
+
+                                            @if($day_bill==$monthnow)
+                                             <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$daynow/30)}}</p>
+                                            @endif
+
+                                            @if($day_bill<$monthnow)
+
+                                              
+                                             <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price)}}</p>
+                                             
+
+                                            @endif
+
+                                          @endif  
+                                          
+                                          @if($debit->time!=null&&$day_bill!=null)
+                                            @if($day_bill==$monthnow||$ngaydebit==$monthnow)
+                                                <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price*$daynow/30)}}</p>
+                                            @endif
+                                            @if($day_bill<$monthnow&&$ngaydebit<$monthnow)
+                                             <p style="color: red; font-weight: bold;" id="tienphong">{{(int)($room->price)}}</p>
+                                            @endif
                                           @endif
 
-                                        @endif
+
+
+
   
                                       </td>
                                       <td></td>
@@ -309,16 +358,16 @@
                             width: 80%;
                             text-align: center;"  >
                <div class="form-group">
-                <form action="{{route('postphanhoi')}}" method="POST">
+                <form action="{{route('khachthue', ['cmnd'=>$cmnd])}}" method="POST">
                   <input type="hidden" name="_token"  value="{{csrf_token()}}">
                    <label for="exampleFormControlTextarea1" style="float: left; font-weight: bold;">Phản hồi</label>
                    <input type="hidden" class="hidden" name="cmndfeedback" value="{{$cmnd}}">
                    <input type="hidden" class="hidden" name="code" value="{{$infor->code}}">
                     <textarea class="form-control" name="textreponse" id="exampleFormControlTextarea1" rows="3"></textarea>
-                  </div>
+                  
                    <button type="submit" class="btn btn-md btn-primary">Send</button>
                 </form>
-                   
+                   </div>
              </footer>
                 
       </section>

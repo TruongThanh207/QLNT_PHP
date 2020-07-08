@@ -140,7 +140,17 @@
                   <br>
                   <div>
                     <span style="color: black; font-weight: bold">CMND</span>
-                    <input required type="number" class="form-control" minlength="8" style="width: 13rem; float: right; margin-right: 10px" name="CMND">
+                    <input required type="number" class="form-control" minlength="9" style="width: 13rem; float: right; margin-right: 10px" name="CMND">
+                  </div>
+                  <br>
+                   <div>
+                    <span style="color: black; font-weight: bold">Tiền Cọc</span>
+                    <input required type="number" class="form-control" min="0" style="width: 13rem; float: right; margin-right: 10px" name="tiencoc">
+                  </div>
+                  <br>
+                   <div>
+                    <span style="color: black; font-weight: bold">Thời Hạn Hợp Đồng (tháng)</span>
+                    <input required type="number" class="form-control" min="0" style="width: 13rem; float: right; margin-right: 10px" name="thoihanhd">
                   </div>
                 </div>
                 <br>

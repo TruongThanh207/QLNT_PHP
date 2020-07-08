@@ -18,6 +18,7 @@
                         @endif
           <div class="row">
             @foreach($data as $dt)
+            @if($dt->username!=Auth::user()->username)
             <div class="col-md-6 col-xl-6">                       
               <div class="card">
                 <div class="card-body">
@@ -33,6 +34,7 @@
                 </div>
               </div>
             </div>
+            @endif
             @endforeach
              <div class="col-md-6 col-xl-6">                       
               <div class="card">

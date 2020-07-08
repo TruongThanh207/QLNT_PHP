@@ -16,7 +16,7 @@ use PDF;
 class BillController extends Controller
 {
     public function getbill(){
-        $bill =Bill::paginate(5);
+        $bill =Bill::paginate(10);
     	return view('HomePage.Bill', [
             'title'=>'Bill Management',
             'bill'=>$bill
@@ -34,8 +34,16 @@ class BillController extends Controller
        		 $person = Person::where('registercode', $infor->code)->get();
 
        		 $dayinfor = strtotime($infor->registerday);
-       		  $date = date('d/m/Y');
-       
+       		 $date = date('d/m/Y');
+             $bill = Bill::where('roomcode', $infor->roomcode)
+                        ->where('CMND',$Request->cmnd)->orderBy('code', 'DESC')->first();
+             $ngaythanhtoanbill=null; 
+             $month_bill = null;     
+                if(isset($bill))
+                {
+                    $ngaythanhtoanbill = date('m',strtotime($bill->daynow));
+                     $month_bill = date('Y/m/d',strtotime($bill->daynow));
+                }
 
        
 	        $monthnow = date('m', strtotime("2020/6/1"));
@@ -70,13 +78,16 @@ class BillController extends Controller
 	        $x =strtotime(date($day_first));
 	        $sec_first = $x-$dayinfor;
 	        $day1 =$sec_first/86400;
-
-	        if($debit==null)
-	        {
-	            $debit = new Debit();
-	            $debit->money =0;
-	        }
-
+            $ngaydebit = null;
+            if($debit==null)
+            {
+                $debit = new Debit();
+                $debit->money =0; 
+            }
+            else
+            {
+                $ngaydebit = date('m', strtotime($debit->time));
+            }
 	        $us = Bill::where('CMND',$Request->cmnd)
 	        			->whereMonth('daynow','=',$Request->month)->paginate(3);
 
@@ -96,9 +107,103 @@ class BillController extends Controller
             'monthdk'=>$monthdk,
             'daydk'=>$daydk,
             'day1'=>$day1,
-            'data'=>$us
+            'data'=>$us,
+            'day_bill'=>$ngaythanhtoanbill,
+            'ngaydebit'=>$ngaydebit,
+            'month_bill'=>$month_bill
 
         	]);
+        //  $infor = InforRegister::where('CMND', $Request->cmnd)->first();
+        // //$bill = Bill::where('')
+
+        // $bill = Bill::where('roomcode', $infor->roomcode)
+        //                 ->where('CMND',$Request->cmnd)->orderBy('code', 'DESC')->first();
+        // $ngaythanhtoanbill=null; 
+        //           $month_bill = null;     
+        // if(isset($bill))
+        // {
+        //     $ngaythanhtoanbill = date('m',strtotime($bill->daynow));
+        //      $month_bill = date('Y/m/d',strtotime($bill->daynow));
+        // }
+        // $room = Room::where('code', $infor->roomcode)->first();
+
+        // $date = date('d/m/Y');
+        // $daydk = date('d', strtotime($infor->registerday));
+
+        // $monthdk = date('m', strtotime($infor->registerday));
+        
+      
+        // $debit = null;
+        // $debit = Debit::where('registercode', $infor->code)->first();
+
+        // $person = Person::where('registercode', $infor->code)->get();
+        // $count = 0;
+        // $countper = 0;
+        // if($person!=null)
+        // {
+        //     foreach($person as $countxe)
+        //     {
+        //         $count += $countxe->vehicle;
+        //         $countper++;
+        //     }
+        // }
+
+        // $dayinfor = strtotime($infor->registerday);
+        // $times = date("Y/m/d");
+        // $datechot = strtotime($times);
+        // $sec =$datechot - $dayinfor;
+        // $day =$sec/86400;
+
+        // $service = Service::all();
+
+        // $day_now = date('d',strtotime($times));
+
+        // $month_now = date('m',strtotime($times));
+        // $year_now = date('Y',strtotime($times));
+        // $month = $month_now-$monthdk;
+
+        // $day_first = $year_now."/".$month_now."/1";
+        // $x =strtotime(date($day_first));
+        // $sec_first = $x-$dayinfor;
+        // $day1 =$sec_first/86400;
+
+        // $ngaydebit = null;
+        // if($debit==null)
+        // {
+        //     $debit = new Debit();
+        //     $debit->money =0; 
+        // }
+        // else
+        // {
+        //     $ngaydebit = date('m', strtotime($debit->time));
+        // }
+
+        // $us = Bill::where('cmnd',$Request->cmnd)->paginate(5);
+
+
+        // return view('HomePage.KhachThue.infor',[
+        //     'cmnd'=>$Request->cmnd, 
+        //     'date' =>$date,
+        //     'month'=>$month,
+        //     'monthnow'=>$Request->month,
+        //     'infor'=>$infor,
+        //     'room'=>$room,
+        //     'debit'=>$debit,
+        //     'countper'=>$countper,
+        //     'day'=>$day,
+        //     'service'=>$service,
+        //     'countxe'=>$count,
+        //     'daynow'=>$day_now,
+        //     'monthdk'=>$monthdk,
+        //     'daydk'=>$daydk,
+        //     'day1'=>$day1,
+        //     'data'=>$us,
+        //     'times'=>$times,
+        //     'day_bill'=>$ngaythanhtoanbill,
+        //     'ngaydebit'=>$ngaydebit,
+        //     'month_bill'=>$month_bill
+
+        // ]);
     }
     public function postphanhoi(Request $Request)
     {
@@ -108,7 +213,8 @@ class BillController extends Controller
         $feedback->status = 0;
         $feedback->registercode=$Request->code;
         $feedback->save();
-    	return redirect()->route('khachthue', [$Request->cmndfeedback])->with('success','Phản hồi thành công!');
+    
+        return redirect()->route('khachthue', ['cmnd'=>$Request->cmndfeedback])->with('success','Phản hồi thành công!');
     }
     public function pdf(Request $Request)
     {
@@ -145,6 +251,8 @@ class BillController extends Controller
              $data->totalmoney = $Request->totalmoney;
 
               $data->save();
+              $inforregister = InforRegister::where('roomcode', $Request->roomcode)->first();
+              $debit = Debit::where('registercode', $inforregister->code)->delete();
 
               $use = User::find($Request->use);
              
@@ -206,6 +314,7 @@ class BillController extends Controller
                         'status'=> 0
                 ]);
                 $infor = InforRegister::where('code', $Request->code)->delete();
+                $debit = Debit::where('registercode', $Request->code)->delete();
 
 // //traphong
               $use = User::find($Request->use);

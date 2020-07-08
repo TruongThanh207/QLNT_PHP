@@ -18,6 +18,9 @@
                   	<div class="col-md-6">
                   		<h4>Bill</h4>
                   	</div>
+                     <div class="col-md-6 text-right">
+                      <button type="submit" data-toggle="modal" data-target=".xoa-modal" class="btn btn-primary">Xóa</button>
+               </div>
 					       
                   </div>
                   
@@ -83,9 +86,7 @@
                 </div>
                 @endif
               </div>
-               <div class="col-md-6 text-right">
-                      <button type="submit" data-toggle="modal" data-target=".xoa-modal" class="btn btn-primary">Xóa</button>
-              </div>
+              
 
             </div>
             

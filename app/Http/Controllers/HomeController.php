@@ -18,8 +18,17 @@ class HomeController extends Controller
     }
     public function xoaroom(Request $Request)
     {
-    	$us = Room::where('code', $Request->code)->delete();
-    	return redirect()->route('gethome')->with('success', 'Xóa Thành Công!');
+    	$us = Room::where('code', $Request->code)->first();
+        if($us->status==1)
+        {
+            return redirect()->route('gethome')->with('warning', 'Tình Trạng Phòng Đang Hoạt Động!');
+        }
+        else
+        {
+            $del_us = Room::where('code', $Request->code)->delete();
+            return redirect()->route('gethome')->with('success', 'Xóa Thành Công!');
+        }
+    	
 		
     }
     public function postroom(Request $Request)
@@ -79,6 +88,8 @@ class HomeController extends Controller
             $us->roomcode = $Request->room_code;
             $us->nguoidaidien = $Request->nguoidaidien;
             $us->CMND = $Request->CMND;
+            $us->TienCoc = $Request->tiencoc;
+            $us->ThoiHanHD = $Request->thoihanhd;
             $us->save();
             $room = Room::where('code', $Request->room_code)->update([
                     'status'=>1
@@ -112,7 +123,7 @@ class HomeController extends Controller
             else
             {
                 $thangtruoc=null;
-            }
+            } 
             
 
             //
@@ -153,12 +164,17 @@ class HomeController extends Controller
         $monthnow = date('m', strtotime($s));
         $month = $monthnow-$monthdk;
         $date = date('d-m-Y');
+        $month_debit = null;
         if($debit==null)
         {
             $debit = new Debit();
             $debit->money =0;
         }
-        if($month_now==$thangtruoc || $monthdk==$month_now) $togglethanhtoan = 0;
+        else
+        {
+            $month_debit = date('m',strtotime($debit->time));
+        }
+        if($month_now==$thangtruoc || $monthdk==$month_now ||$month_debit==$month_now) $togglethanhtoan = 0;
         else if (($thangtruoc<$month_now || $thangtruoc==null) && $monthdk<$month_now)
         {
             $togglethanhtoan = 1;
@@ -199,12 +215,17 @@ class HomeController extends Controller
     }
     public function ghino($id, Request $Request)
     {
+        $s = date("Y/m/d");
+             $month_now = date('m',strtotime($s));
+             $year_now = date('Y',strtotime($s));
+             $day_first = $year_now."/".$month_now."/01";
          $debit = Debit::where('registercode', $id)->first();
          if($debit==null)
          {
                 $debit = new Debit();
                 $debit->code = $debit->Render_Code();
                 $debit->money = $Request->codemoney;
+                $debit->time = $day_first;
                 $debit->registercode=$id;
                 $debit->save(); 
             return redirect()->route('gethome')->with('success','Đã Ghi Nợ!');
@@ -212,6 +233,7 @@ class HomeController extends Controller
          else
          {
             $debit = Debit::where('registercode', $id)->update([
+                    'time' => $day_first,
                     'money'=>$Request->codemoney
             ]);
             return redirect()->route('gethome')->with('success','Đã Ghi Nợ!');
@@ -220,7 +242,15 @@ class HomeController extends Controller
     }
      public function xoano(Request $Request)
     {
-        $debit = Debit::where('registercode', $Request->codeno)->delete();
+         $s = date("Y/m/d");
+             $month_now = date('m',strtotime($s));
+             $year_now = date('Y',strtotime($s));
+             $day_first = $year_now."/".$month_now."/01";
+        $debit = Debit::where('registercode', $Request->codeno)->update(
+            [
+                'time' => $day_first,
+                'money' => 0
+            ]);
         return redirect()->route('gethome')->with('success','Đã Xóa Nợ!');
     }
     public function fixfeedback($id)

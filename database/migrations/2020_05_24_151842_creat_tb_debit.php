@@ -16,6 +16,7 @@ class CreatTbDebit extends Migration
         Schema::create('Debit', function (Blueprint $table) {
             $table->string('code');
             $table->integer('money');
+            $table->datetime('time');
             $table->string('registercode');
             $table->primary('code');
             $table->foreign('registercode')->references('code')->on('InforRegister')->onDelete('cascade');
