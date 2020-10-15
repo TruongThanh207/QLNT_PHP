@@ -18,6 +18,8 @@ class CreatTbDkroom extends Migration
             $table->datetime('registerday');
             $table->string('nguoidaidien');
             $table->integer('CMND');
+            $table->integer('TienCoc');
+            $table->integer('ThoiHanHD');
             $table->string('roomcode');
             $table->primary('code');
             $table->foreign('roomcode')->references('code')->on('Rooms')->onDelete('cascade');
