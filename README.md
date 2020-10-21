@@ -2,7 +2,11 @@
 
 <h1>composer require dompdf/dompdf </h1>
 
-![](https://imgur.com/gallery/BH5LQUW)
+![](https://i.imgur.com/rJhG3uk.png)
+
+![](https://i.imgur.com/xeUQnCE.png)
+
+![](https://i.imgur.com/rgknPrh.png)
 
 
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
