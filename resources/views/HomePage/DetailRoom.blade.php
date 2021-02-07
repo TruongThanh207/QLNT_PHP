@@ -331,7 +331,7 @@
                                         @if($month==1)
                                       <p id="tienphong" style="color: red; font-weight: bold;">{{(int)($room->price*$day1/30)}}</p>
                                         @else 
-                                          @if ($month>1)
+                                          @if ($month!=1)
                                           <p id="tienphong" style="color: red; font-weight: bold;">{{$room->price}}</p>
                                           @endif
 

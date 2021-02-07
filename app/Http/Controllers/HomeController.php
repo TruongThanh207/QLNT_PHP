@@ -175,7 +175,7 @@ class HomeController extends Controller
             $month_debit = date('m',strtotime($debit->time));
         }
         if($month_now==$thangtruoc || $monthdk==$month_now ||$month_debit==$month_now) $togglethanhtoan = 0;
-        else if (($thangtruoc<$month_now || $thangtruoc==null) && $monthdk<$month_now)
+        else if (($thangtruoc<$month_now || $thangtruoc==null) && (strtotime($infor->registerday)< strtotime($date) ))
         {
             $togglethanhtoan = 1;
         }
